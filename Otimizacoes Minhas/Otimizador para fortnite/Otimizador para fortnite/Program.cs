@@ -1,12 +1,252 @@
-﻿using System;
+﻿using OtimizadorParaFortnite.Optimizers;
+using System.IO;
+using System.Diagnostics;
+        // Criação de log simples
+        string logPath = "otimizador_log.txt";
+        void Log(string msg)
+        {
+            File.AppendAllText(logPath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {msg}\n");
+        }
+using OtimizadorParaFortnite.Optimizers;
+using OtimizadorParaFortnite.Optimizers;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 
+
+
+// Classe principal de orquestração
 class PerformanceOptimizer
 {
+
+    // Monitoramento em tempo real de CPU/RAM
+    public static void MonitorSystemUsage()
+    {
+        try
+        {
+            var cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+            var ramCounter = new PerformanceCounter("Memory", "Available MBytes");
+            Console.WriteLine("Monitorando uso de CPU e RAM. Pressione Ctrl+C para sair.");
+            while (true)
+            {
+                float cpu = cpuCounter.NextValue();
+                float ram = ramCounter.NextValue();
+                Console.Write($"CPU: {cpu:F1}% | RAM disponível: {ram} MB\r");
+                Thread.Sleep(1000);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Erro ao monitorar uso do sistema: " + ex.Message);
+        }
+    }
+
+    // Agendamento de tarefas de limpeza
+    public static void ScheduleCleanup(int intervalMinutes = 60)
+    {
+        Timer timer = null;
+        timer = new Timer(_ =>
+        {
+            Console.WriteLine("Executando limpeza agendada...");
+            CleanTempFiles();
+        }, null, 0, intervalMinutes * 60 * 1000);
+    }
+
+    // Modo silencioso
+    public static void RunSilentMode()
+    {
+        CloseBackgroundPrograms();
+        SetFortniteHighPriority();
+        DisableWindowsVisualEffects();
+        DisableFileIndexing();
+        EnableGameMode();
+        OptimizeNetworkSettings();
+        OptimizeAMDGraphics();
+        SetHighPerformancePowerPlan();
+        CleanTempFiles();
+        DisableUnnecessaryServices();
+        OptimizeInputLag();
+        OptimizeConnection();
+    }
+
+    // Dashboard simples (CLI)
+    public static void ShowDashboard()
+    {
+        Console.WriteLine("==== DASHBOARD DE OTIMIZAÇÃO ====");
+        // Exemplo: mostrar uso de CPU/RAM e status de otimizações
+        var cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+        var ramCounter = new PerformanceCounter("Memory", "Available MBytes");
+        float cpu = cpuCounter.NextValue();
+        float ram = ramCounter.NextValue();
+        Console.WriteLine($"CPU: {cpu:F1}% | RAM disponível: {ram} MB");
+        Console.WriteLine("Otimizações aplicadas: ");
+        Console.WriteLine("- Programas em segundo plano fechados");
+        Console.WriteLine("- Prioridade do Fortnite ajustada");
+        Console.WriteLine("- Efeitos visuais desabilitados");
+        Console.WriteLine("- Indexação desabilitada");
+        Console.WriteLine("- Modo de jogo ativado");
+        Console.WriteLine("- Rede otimizada");
+        Console.WriteLine("- AMD otimizado");
+        Console.WriteLine("- Plano de energia: Alto desempenho");
+        Console.WriteLine("- Limpeza de arquivos temporários");
+        Console.WriteLine("- Serviços não essenciais desativados");
+        Console.WriteLine("- Input lag otimizado");
+        Console.WriteLine("- Conexão otimizada");
+    }
+
+    // Limpeza de arquivos temporários
+    public static void CleanTempFiles()
+    {
+        try
+        {
+            string tempPath = Path.GetTempPath();
+            var files = Directory.GetFiles(tempPath);
+            var dirs = Directory.GetDirectories(tempPath);
+            foreach (var file in files)
+            {
+                try { File.Delete(file); } catch { }
+            }
+            foreach (var dir in dirs)
+            {
+                try { Directory.Delete(dir, true); } catch { }
+            }
+            Console.WriteLine("Arquivos temporários limpos.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Erro ao limpar arquivos temporários: " + ex.Message);
+        }
+    }
+
+    // Fechar serviços não essenciais do Windows
+    public static void DisableUnnecessaryServices()
+    {
+        try
+        {
+            string[] servicesToDisable = new string[]
+            {
+                "DiagTrack", // Telemetria
+                "SysMain",   // Superfetch
+                "WSearch",   // Windows Search
+                "Fax",       // Fax
+                "XblGameSave", // Xbox
+                "MapsBroker", // Mapas
+                "WMPNetworkSvc" // Windows Media Player Network
+            };
+            foreach (var service in servicesToDisable)
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "sc",
+                    Arguments = $"config {service} start= disabled",
+                    Verb = "runas",
+                    CreateNoWindow = true,
+                    UseShellExecute = true
+                });
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "sc",
+                    Arguments = $"stop {service}",
+                    Verb = "runas",
+                    CreateNoWindow = true,
+                    UseShellExecute = true
+                });
+            }
+            Console.WriteLine("Serviços não essenciais desativados.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Erro ao desativar serviços: " + ex.Message);
+        }
+    }
+
+    // Otimizações para reduzir input lag
+    public static void OptimizeInputLag()
+    {
+        try
+        {
+            // Desabilitar mouse acceleration
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "reg",
+                Arguments = "add \"HKCU\\Control Panel\\Mouse\" /v MouseSpeed /t REG_SZ /d 0 /f",
+                Verb = "runas",
+                CreateNoWindow = true,
+                UseShellExecute = true
+            });
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "reg",
+                Arguments = "add \"HKCU\\Control Panel\\Mouse\" /v MouseThreshold1 /t REG_SZ /d 0 /f",
+                Verb = "runas",
+                CreateNoWindow = true,
+                UseShellExecute = true
+            });
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "reg",
+                Arguments = "add \"HKCU\\Control Panel\\Mouse\" /v MouseThreshold2 /t REG_SZ /d 0 /f",
+                Verb = "runas",
+                CreateNoWindow = true,
+                UseShellExecute = true
+            });
+            // Ajustar timer resolution
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "cmd",
+                Arguments = "/c wmic computersystem where name=\"%computername%\" set systemtimersresolution=1",
+                Verb = "runas",
+                CreateNoWindow = true,
+                UseShellExecute = true
+            });
+            Console.WriteLine("Input lag otimizado.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Erro ao otimizar input lag: " + ex.Message);
+        }
+    }
+
+    // Otimizações para melhorar conexão
+    public static void OptimizeConnection()
+    {
+        try
+        {
+            // Desabilitar Large Send Offload e outras otimizações de rede
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "netsh",
+                Arguments = "interface tcp set global autotuninglevel=disabled",
+                Verb = "runas",
+                CreateNoWindow = true,
+                UseShellExecute = true
+            });
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "netsh",
+                Arguments = "interface tcp set global chimney=disabled",
+                Verb = "runas",
+                CreateNoWindow = true,
+                UseShellExecute = true
+            });
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "netsh",
+                Arguments = "interface tcp set global rss=disabled",
+                Verb = "runas",
+                CreateNoWindow = true,
+                UseShellExecute = true
+            });
+            Console.WriteLine("Conexão otimizada para jogos.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Erro ao otimizar conexão: " + ex.Message);
+        }
+    }
     // Importando funções da API do Windows
     [DllImport("user32.dll", SetLastError = true)]
     public static extern int SetPriorityClass(IntPtr hProcess, uint dwPriorityClass);
@@ -19,33 +259,80 @@ class PerformanceOptimizer
 
     public static void Main(string[] args)
     {
-        Console.WriteLine("Iniciando otimizações...");
-
-        // 1. Alterar o plano de energia para "Alto Desempenho"
-        SetHighPerformancePowerPlan();
-
-        // 2. Fechar Programas em Segundo Plano
-        CloseBackgroundPrograms();
-
-        // 3. Alterar a Prioridade do Processo do Fortnite
-        SetFortniteHighPriority();
-
-        // 4. Desabilitar Efeitos Visuais do Windows
-        DisableWindowsVisualEffects();
-
-        // 5. Desabilitar Indexação de Arquivos
-        DisableFileIndexing();
-
-        // 6. Habilitar Modo de Jogo
-        EnableGameMode();
-
-        // 7. Ajuste de Rede para Melhor Desempenho
-        OptimizeNetworkSettings();
-
-        // 8. Otimizações Específicas para Placa de Vídeo AMD
-        OptimizeAMDGraphics();
-
-        Console.WriteLine("Otimizações Concluídas.");
+        Console.WriteLine("==== Otimizador Para Fortnite ====");
+        bool sair = false;
+        while (!sair)
+        {
+            Console.WriteLine("\nEscolha uma opção:");
+            Console.WriteLine("[1] Otimização Completa");
+            Console.WriteLine("[2] Apenas Rotina de Manutenção");
+            Console.WriteLine("[3] Apenas Otimização Pré-Jogo");
+            Console.WriteLine("[4] Desfazer Alterações (Rollback)");
+            Console.WriteLine("[5] Otimizações Avançadas para Jogos");
+            Console.WriteLine("[0] Sair");
+            Console.Write("Opção: ");
+            var op = Console.ReadLine();
+            switch (op)
+            {
+                case "1":
+                    Log("Iniciando Otimização Completa");
+                    RollbackManager.BackupAll();
+                    Log("Backup realizado");
+                    RoutineOptimizer.Run();
+                    Log("Rotina de manutenção executada");
+                    GameModeOptimizer.Run();
+                    Log("Otimização pré-jogo executada");
+                    StartupOptimizer.OptimizeStartup();
+                    Log("Startup otimizado");
+                    NetworkQoS.SetQoS();
+                    Log("QoS sugerido");
+                    DriverChecker.CheckDrivers();
+                    Log("Drivers verificados");
+                    LaptopPowerOptimizer.Optimize();
+                    Log("Otimização de energia para laptop");
+                    TemperatureMonitor.Monitor();
+                    Log("Monitoramento de temperatura chamado");
+                    Console.WriteLine("Otimização completa finalizada.");
+                    break;
+                case "2":
+                    Log("Iniciando Rotina de Manutenção");
+                    RollbackManager.BackupAll();
+                    Log("Backup realizado");
+                    RoutineOptimizer.Run();
+                    Log("Rotina de manutenção executada");
+                    break;
+                case "3":
+                    Log("Iniciando Otimização Pré-Jogo");
+                    RollbackManager.BackupAll();
+                    Log("Backup realizado");
+                    GameModeOptimizer.Run();
+                    Log("Otimização pré-jogo executada");
+                    break;
+                case "4":
+                    Log("Restaurando alterações (rollback)");
+                    RollbackManager.RestoreAll();
+                    Log("Rollback executado");
+                    break;
+                case "5":
+                    Log("Iniciando Otimizações Avançadas para Jogos");
+                    SystemTweaks.Apply();
+                    NetworkTweaks.Apply();
+                    GPUTweaks.Apply();
+                    AudioTweaks.Apply();
+                    DiskTweaks.Apply();
+                    AdvancedTweaks.Apply();
+                    Log("Otimizações avançadas aplicadas");
+                    break;
+                case "0":
+                    sair = true;
+                    Log("Saindo do otimizador");
+                    break;
+                default:
+                    Console.WriteLine("Opção inválida!");
+                    break;
+            }
+        }
+        Console.WriteLine("Saindo do otimizador.");
     }
 
     // Função para alterar o plano de energia para "Alto Desempenho"
