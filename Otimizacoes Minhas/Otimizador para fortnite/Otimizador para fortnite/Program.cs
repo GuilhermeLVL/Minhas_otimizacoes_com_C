@@ -1,32 +1,31 @@
-﻿using OtimizadorParaFortnite.Optimizers;
-using System.IO;
-using System.Diagnostics;
-        // Criação de log simples
-        string logPath = "otimizador_log.txt";
-        void Log(string msg)
-        {
-            File.AppendAllText(logPath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {msg}\n");
-        }
-using OtimizadorParaFortnite.Optimizers;
-using OtimizadorParaFortnite.Optimizers;
+﻿
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
+using OtimizadorParaFortnite.Optimizers;
 
 
 
 // Classe principal de orquestração
+
 class PerformanceOptimizer
 {
+    // Criação de log simples
+    static string logPath = "otimizador_log.txt";
+    public static void Log(string msg)
+    {
+        File.AppendAllText(logPath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {msg}\n");
+    }
 
     // Monitoramento em tempo real de CPU/RAM
-    public static void MonitorSystemUsage()
+    public static void MonitorSystemUsage() 
     {
         try
         {
+#if WINDOWS
             var cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
             var ramCounter = new PerformanceCounter("Memory", "Available MBytes");
             Console.WriteLine("Monitorando uso de CPU e RAM. Pressione Ctrl+C para sair.");
@@ -37,6 +36,9 @@ class PerformanceOptimizer
                 Console.Write($"CPU: {cpu:F1}% | RAM disponível: {ram} MB\r");
                 Thread.Sleep(1000);
             }
+#else
+            Console.WriteLine("Monitoramento de CPU/RAM disponível apenas no Windows.");
+#endif
         }
         catch (Exception ex)
         {
@@ -47,8 +49,7 @@ class PerformanceOptimizer
     // Agendamento de tarefas de limpeza
     public static void ScheduleCleanup(int intervalMinutes = 60)
     {
-        Timer timer = null;
-        timer = new Timer(_ =>
+        Timer timer = new Timer(_ =>
         {
             Console.WriteLine("Executando limpeza agendada...");
             CleanTempFiles();
@@ -77,11 +78,15 @@ class PerformanceOptimizer
     {
         Console.WriteLine("==== DASHBOARD DE OTIMIZAÇÃO ====");
         // Exemplo: mostrar uso de CPU/RAM e status de otimizações
+        #if WINDOWS
         var cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
         var ramCounter = new PerformanceCounter("Memory", "Available MBytes");
         float cpu = cpuCounter.NextValue();
         float ram = ramCounter.NextValue();
         Console.WriteLine($"CPU: {cpu:F1}% | RAM disponível: {ram} MB");
+        #else
+        Console.WriteLine("Monitoramento de CPU/RAM disponível apenas no Windows.");
+        #endif
         Console.WriteLine("Otimizações aplicadas: ");
         Console.WriteLine("- Programas em segundo plano fechados");
         Console.WriteLine("- Prioridade do Fortnite ajustada");
