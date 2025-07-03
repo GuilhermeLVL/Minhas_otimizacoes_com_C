@@ -59,18 +59,43 @@ class PerformanceOptimizer
     // Modo silencioso
     public static void RunSilentMode()
     {
-        CloseBackgroundPrograms();
+        int delayMs = 2000; // 2 segundos entre comandos
+        Log("Executando: SetFortniteHighPriority");
         SetFortniteHighPriority();
+        Thread.Sleep(delayMs);
+        Log("Executando: DisableWindowsVisualEffects");
         DisableWindowsVisualEffects();
+        Thread.Sleep(delayMs);
+        Log("Executando: DisableFileIndexing");
         DisableFileIndexing();
+        Thread.Sleep(delayMs);
+        Log("Executando: EnableGameMode");
         EnableGameMode();
+        Thread.Sleep(delayMs);
+        Log("Executando: OptimizeNetworkSettings");
         OptimizeNetworkSettings();
+        Thread.Sleep(delayMs);
+        Log("Executando: OptimizeAMDGraphics");
         OptimizeAMDGraphics();
+        Thread.Sleep(delayMs);
+        Log("Executando: SetHighPerformancePowerPlan");
         SetHighPerformancePowerPlan();
+        Thread.Sleep(delayMs);
+        Log("Executando: CleanTempFiles");
         CleanTempFiles();
+        Thread.Sleep(delayMs);
+        Log("Executando: DisableUnnecessaryServices");
         DisableUnnecessaryServices();
+        Thread.Sleep(delayMs);
+        Log("Executando: OptimizeInputLag");
         OptimizeInputLag();
+        Thread.Sleep(delayMs);
+        Log("Executando: OptimizeConnection");
         OptimizeConnection();
+        Thread.Sleep(delayMs);
+        Log("Executando: CloseBackgroundPrograms (por último)");
+        CloseBackgroundPrograms();
+        Thread.Sleep(delayMs);
     }
 
     // Dashboard simples (CLI)
@@ -345,11 +370,13 @@ class PerformanceOptimizer
     {
         try
         {
+            Log("Alterando plano de energia para 'Alto Desempenho'...");
             Console.WriteLine("Alterando plano de energia para 'Alto Desempenho'...");
             Process.Start("powercfg", "/setactive SCHEME_HIGH_PERFORMANCE");
         }
         catch (Exception ex)
         {
+            Log("Erro ao alterar plano de energia: " + ex.Message);
             Console.WriteLine("Erro ao alterar plano de energia: " + ex.Message);
         }
     }
@@ -357,6 +384,7 @@ class PerformanceOptimizer
     // Função para fechar programas desnecessários
     public static void CloseBackgroundPrograms()
     {
+        Log("Fechando programas em segundo plano...");
         Console.WriteLine("Fechando programas em segundo plano...");
         var processes = Process.GetProcesses();
         foreach (var process in processes)
@@ -367,11 +395,13 @@ class PerformanceOptimizer
                 if (process.ProcessName != "explorer" && process.ProcessName != "Fortnite" && !process.MainWindowTitle.Contains("Game"))
                 {
                     process.Kill();
+                    Log($"Fechando {process.ProcessName}");
                     Console.WriteLine($"Fechando {process.ProcessName}");
                 }
             }
             catch (Exception ex)
             {
+                Log($"Erro ao fechar {process.ProcessName}: {ex.Message}");
                 Console.WriteLine($"Erro ao fechar {process.ProcessName}: {ex.Message}");
             }
         }
@@ -382,17 +412,20 @@ class PerformanceOptimizer
     {
         try
         {
+            Log("Alterando a prioridade do Fortnite para 'Alta'...");
             Console.WriteLine("Alterando a prioridade do Fortnite para 'Alta'...");
             var fortniteProcesses = Process.GetProcessesByName("FortniteClient-Win64-Shipping"); // Nome do processo do Fortnite
             foreach (var process in fortniteProcesses)
             {
                 IntPtr handle = OpenProcess(0x1F0FFF, false, process.Id); // 0x1F0FFF é o código para acesso total ao processo
                 SetPriorityClass(handle, HIGH_PRIORITY_CLASS);
+                Log($"Prioridade do {process.ProcessName} alterada para alta.");
                 Console.WriteLine($"Prioridade do {process.ProcessName} alterada para alta.");
             }
         }
         catch (Exception ex)
         {
+            Log("Erro ao alterar prioridade do Fortnite: " + ex.Message);
             Console.WriteLine("Erro ao alterar prioridade do Fortnite: " + ex.Message);
         }
     }
@@ -402,12 +435,14 @@ class PerformanceOptimizer
     {
         try
         {
+            Log("Desabilitando efeitos visuais do Windows...");
             Console.WriteLine("Desabilitando efeitos visuais do Windows...");
             Process.Start("SystemPropertiesPerformance.exe", "/pagefile");
             // A seguir pode-se configurar para desmarcar as opções de efeitos visuais
         }
         catch (Exception ex)
         {
+            Log("Erro ao desabilitar efeitos visuais: " + ex.Message);
             Console.WriteLine("Erro ao desabilitar efeitos visuais: " + ex.Message);
         }
     }
@@ -417,12 +452,14 @@ class PerformanceOptimizer
     {
         try
         {
+            Log("Desabilitando indexação de arquivos...");
             Console.WriteLine("Desabilitando indexação de arquivos...");
             Process.Start("services.msc");
             // Procurar pelo serviço "Windows Search" e configurá-lo para manual ou desabilitado
         }
         catch (Exception ex)
         {
+            Log("Erro ao desabilitar indexação de arquivos: " + ex.Message);
             Console.WriteLine("Erro ao desabilitar indexação de arquivos: " + ex.Message);
         }
     }
@@ -432,12 +469,14 @@ class PerformanceOptimizer
     {
         try
         {
+            Log("Habilitando modo de jogo do Windows...");
             Console.WriteLine("Habilitando modo de jogo do Windows...");
             Process.Start("ms-settings:gaming-gameMode");
             // O usuário pode ser direcionado para ativar a opção de "Modo de Jogo"
         }
         catch (Exception ex)
         {
+            Log("Erro ao habilitar o Modo de Jogo: " + ex.Message);
             Console.WriteLine("Erro ao habilitar o Modo de Jogo: " + ex.Message);
         }
     }
@@ -447,6 +486,7 @@ class PerformanceOptimizer
     {
         try
         {
+            Log("Otimizar configurações de rede...");
             Console.WriteLine("Otimizar configurações de rede...");
             // Desabilitar a limitação de TCP/UDP e outras configurações de rede
             Process.Start("netsh", "interface tcp set global autotuninglevel=normal");
@@ -454,6 +494,7 @@ class PerformanceOptimizer
         }
         catch (Exception ex)
         {
+            Log("Erro ao otimizar configurações de rede: " + ex.Message);
             Console.WriteLine("Erro ao otimizar configurações de rede: " + ex.Message);
         }
     }
@@ -463,22 +504,27 @@ class PerformanceOptimizer
     {
         try
         {
+            Log("Otimizações específicas para placa de vídeo AMD...");
             Console.WriteLine("Otimizações específicas para placa de vídeo AMD...");
 
             // Desabilitar V-Sync globalmente
             Process.Start("C:\\Program Files\\AMD\\CNext\\CNext\\RadeonSettings.exe", "-vsync off");
+            Log("Desabilitando V-Sync globalmente no driver AMD.");
             Console.WriteLine("Desabilitando V-Sync globalmente no driver AMD.");
 
             // Ativar o Anti-Lag
             Process.Start("C:\\Program Files\\AMD\\CNext\\CNext\\RadeonSettings.exe", "-AntiLag on");
+            Log("Ativando o AMD Radeon Anti-Lag.");
             Console.WriteLine("Ativando o AMD Radeon Anti-Lag.");
 
             // Configurar o driver para priorizar desempenho
             Process.Start("C:\\Program Files\\AMD\\CNext\\CNext\\RadeonSettings.exe", "-performance");
+            Log("Forçando o driver AMD a priorizar desempenho.");
             Console.WriteLine("Forçando o driver AMD a priorizar desempenho.");
         }
         catch (Exception ex)
         {
+            Log("Erro ao otimizar configurações da placa de vídeo AMD: " + ex.Message);
             Console.WriteLine("Erro ao otimizar configurações da placa de vídeo AMD: " + ex.Message);
         }
     }

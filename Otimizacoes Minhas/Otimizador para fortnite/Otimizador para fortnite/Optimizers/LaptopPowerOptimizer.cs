@@ -8,6 +8,7 @@ namespace OtimizadorParaFortnite.Optimizers
     {
         public static void Optimize()
         {
+            PerformanceOptimizer.Log("[LaptopPowerOptimizer] Iniciando otimização de energia para laptop");
             try
             {
                 // Otimização apenas se for laptop (Windows)
@@ -17,10 +18,16 @@ namespace OtimizadorParaFortnite.Optimizers
                 {
                     Process.Start("powercfg", "/setactive SCHEME_MIN");
                     Console.WriteLine("Plano de energia otimizado para laptop.");
+                    PerformanceOptimizer.Log("[LaptopPowerOptimizer] Otimização de energia para laptop aplicada");
+                }
+                else
+                {
+                    PerformanceOptimizer.Log("[LaptopPowerOptimizer] Não é laptop ou não foi detectada bateria");
                 }
             }
             catch (Exception ex)
             {
+                PerformanceOptimizer.Log($"[LaptopPowerOptimizer] Erro: {ex.Message}");
                 Console.WriteLine("Erro ao otimizar energia do laptop: " + ex.Message);
             }
         }
